@@ -1,0 +1,98 @@
+---
+import { Layers, Monitor, Zap } from "lucide-react";
+import { TiltCard } from "../components/TiltCard";
+---
+
+<!-- BENEFITS SECTION -->
+<section class="py-24 bg-white relative">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2
+                class="text-4xl lg:text-5xl font-bold mb-4 ibm-plex-serif-semibold-italic"
+            >
+                Услуги дизайна и&nbsp;подготовки к&nbsp;печати
+            </h2>
+            <p class="text-lg opacity-60 max-w-2xl mx-auto">
+                Создаю макеты, которые с&nbsp;первого раза принимают
+                в&nbsp;типографиях Архангельска и&nbsp;Северодвинска.
+                От&nbsp;визитки до&nbsp;многостраничного каталога.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <TiltCard client:load className="h-full">
+                <div
+                    class="bg-cream backdrop-blur-sm p-8 rounded-2xl h-full border border-sand hover:border-terracotta transition-colors group"
+                >
+                    <div
+                        class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
+                    >
+                        <Layers
+                            className="text-terracotta"
+                            size={32}
+                            client:load
+                        />
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-brown">
+                        Дизайн полиграфии
+                    </h3>
+                    <p class="opacity-70 leading-relaxed text-brown/80">
+                        Разработка макетов любой сложности: <strong
+                            >листовки, меню для ресторанов, буклеты, сертификаты</strong
+                        >. Грамотная верстка текста и&nbsp;работа
+                        с&nbsp;сетками.
+                    </p>
+                </div>
+            </TiltCard>
+
+            <TiltCard client:load className="h-full">
+                <div
+                    class="bg-cream backdrop-blur-sm p-8 rounded-2xl h-full border border-sand hover:border-terracotta transition-colors group"
+                >
+                    <div
+                        class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
+                    >
+                        <Monitor
+                            className="text-terracotta"
+                            size={32}
+                            client:load
+                        />
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-brown">
+                        Помощь с&nbsp;макетами (Препресс)
+                    </h3>
+                    <p class="opacity-70 leading-relaxed text-brown/80">
+                        Типография вернула файл? Исправлю ошибки:
+                        <strong
+                            >перевод в&nbsp;CMYK, настройка вылетов, оверпринт</strong
+                        >. Техническая адаптация макетов к&nbsp;офсетной печати.
+                    </p>
+                </div>
+            </TiltCard>
+
+            <TiltCard client:load className="h-full">
+                <div
+                    class="bg-cream backdrop-blur-sm p-8 rounded-2xl h-full border border-sand hover:border-terracotta transition-colors group"
+                >
+                    <div
+                        class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
+                    >
+                        <Zap
+                            className="text-terracotta"
+                            size={32}
+                            client:load
+                        />
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-brown">
+                        Срочность и&nbsp;Связь
+                    </h3>
+                    <p class="opacity-70 leading-relaxed text-brown/80">
+                        Оперативная верстка &laquo;вчера&raquo;. Знаю специфику
+                        требований местных типографий, что экономит ваше время
+                        на согласованиях.
+                    </p>
+                </div>
+            </TiltCard>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,75 @@
+---
+import BeforeAfterSlider from "../components/BeforeAfterSlider.astro";
+import { ContactButton } from "../components/ContactButton";
+
+import beforeImg from "../images/beforeafter/before-after (1).png";
+import afterImg from "../images/beforeafter/before-after (2).png";
+---
+
+<section class="py-24 bg-white relative overflow-hidden">
+    <div class="container mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="order-2 lg:order-1">
+                <div
+                    class="inline-block px-4 py-1 rounded-full bg-purple-100 text-purple-600 font-bold text-sm mb-6 flex items-center gap-2 w-fit"
+                >
+                    <span class="text-lg">✨</span> AI Дизайн и Инфографика
+                </div>
+
+                <h2
+                    class="text-4xl lg:text-5xl font-bold mb-4 ibm-plex-serif-semibold-italic"
+                >
+                    Нейро-фотосессия и дизайн карточек для маркетплейсов
+                </h2>
+
+                <p class="text-lg opacity-70 mb-8 leading-relaxed max-w-lg">
+                    Не тратьте бюджет на аренду фотографа. Пришлите фото товара
+                    с телефона — я сделаю профессиональную
+                    <strong>ретушь, замену фона и инфографику</strong>. Идеально
+                    подходит для <strong
+                        >Wildberries, Ozon или соц. сетей</strong
+                    >
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <ContactButton client:load text="Заказать дизайн" />
+                </div>
+
+                <div class="mt-8 flex items-center gap-4 text-sm opacity-50">
+                    <div class="flex -space-x-2">
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-200 border-2 border-white"
+                        >
+                        </div>
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-300 border-2 border-white"
+                        >
+                        </div>
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-400 border-2 border-white"
+                        >
+                        </div>
+                    </div>
+                    <p>Сэкономлено много ₽ на студиях</p>
+                </div>
+            </div>
+
+            <div class="order-1 lg:order-2">
+                <figure class="relative">
+                    <BeforeAfterSlider
+                        beforeImage={beforeImg}
+                        afterImage={afterImg}
+                    />
+                    <figcaption class="sr-only">
+                        Пример обработки фото товара нейросетью: было фото с
+                        телефона
+                    </figcaption>
+                </figure>
+
+                <p class="text-center text-sm opacity-50 mt-4">
+                    Потяните ползунок, чтобы увидеть магию ✨
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

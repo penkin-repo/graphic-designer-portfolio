@@ -1,0 +1,91 @@
+---
+// Вопросы собраны на основе болей клиентов из отчета (раздел 3 и 5)
+const faqs = [
+    {
+        question:
+            "Типография не принимает макет, говорят «нет вылетов». Исправите?",
+        answer: "Да, это моя специализация. Я добавлю вылеты (bleeds), переведу цвета из RGB в CMYK и проверю файл на ошибки. Работаю с требованиями типографий «Принт», «Формат», «Дапринт» и других в Архангельске.",
+    },
+    {
+        question: "Мне нужно срочно, «вчера». Работаете в выходные?",
+        answer: "Да, я на связи. За срочность (день в день) беру наценку. Пишите в Telegram для оперативной связи.",
+    },
+    {
+        question: "Вы отдаете исходники? Или за них нужно платить?",
+        answer: "Исходники (AI, PSD, CDR, PDF) отдаю бесплатно после полной оплаты заказа. Вы сможете использовать их в будущем без моего участия.",
+    },
+    {
+        question: "Работаете с CorelDRAW (.cdr)?",
+        answer: "Да. Многие дизайнеры отказываются от Corel, но я знаю, что местные производства (сувенирка, наружка) часто требуют именно его. Я могу перевести макет из Illustrator в CorelDRAW корректно.",
+    },
+    {
+        question: "Как происходит оплата?",
+        answer: "Предоплата обязательна после обсуждения проекта. Я работаю официально как ИП и могу предоставить все закрывающие документы.",
+    },
+];
+---
+
+<section class="py-16 bg-white border-t border-sand">
+    <div class="container mx-auto px-6 max-w-3xl">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-bold ibm-plex-serif-semibold-italic mb-4">
+                Частые вопросы
+            </h2>
+            <p class="text-sm opacity-60">
+                Коротко о главном, чтобы не тратить ваше время
+            </p>
+        </div>
+
+        <div class="space-y-4">
+            {
+                faqs.map((faq) => (
+                    <details class="group bg-[#FDFBF7] rounded-xl border border-sand overflow-hidden transition-all duration-300 hover:border-terracotta open:shadow-lg open:ring-1 open:ring-black/5">
+                        <summary class="flex items-center justify-between p-5 cursor-pointer list-none font-medium text-brown">
+                            <span>{faq.question}</span>
+                            <span class="transition-transform duration-300 group-open:rotate-180 opacity-50">
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path d="M6 9L12 15L18 9" />
+                                </svg>
+                            </span>
+                        </summary>
+                        <div class="px-5 pb-5 text-brown/80 text-sm leading-relaxed animate-fade-in">
+                            {faq.answer}
+                        </div>
+                    </details>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Убираем стандартный треугольник details */
+    details > summary {
+        list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    /* Плавное появление текста */
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

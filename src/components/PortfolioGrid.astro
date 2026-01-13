@@ -1,0 +1,163 @@
+---
+// Импортируем типы, если они у вас в отдельном файле, или объявляем тут
+interface PortfolioItem {
+    id?: number;
+    title: string;
+    category: string;
+    image: any;
+    desc: string;
+    slug?: string;
+}
+
+interface Props {
+    items: PortfolioItem[];
+    showAll?: boolean;
+}
+
+import { Image } from "astro:assets";
+
+const { items, showAll = false } = Astro.props;
+
+// Получаем уникальные категории
+const categories = ["Все", ...new Set(items.map((item) => item.category))];
+---
+
+<div class="flex flex-wrap gap-4 mb-8" id="portfolio-filters">
+    {
+        categories.map((cat) => (
+            <button
+                data-category={cat}
+                class:list={[
+                    "filter-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-300",
+                    cat === "Все"
+                        ? "active bg-terracotta text-white shadow-lg shadow-orange-500/30 scale-105"
+                        : "bg-white text-brown hover:bg-sand border border-sand",
+                ]}
+            >
+                {cat}
+            </button>
+        ))
+    }
+</div>
+
+<div
+    class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all"
+    id="portfolio-grid"
+>
+    {
+        items.map((item) => (
+            <div
+                class="portfolio-item group transition-all duration-500 ease-in-out"
+                data-category={item.category}
+            >
+                <a href={`/portfolio/${item.slug || "#"}`}>
+                    <div class="relative overflow-hidden rounded-2xl shadow-lg cursor-pointer">
+                        {/* Добавляем loading="lazy" для производительности */}
+
+                        <Image
+                            src={item.image}
+                            alt={item.title}
+                            loading="lazy"
+                            width={1200}
+                            height={800}
+                            class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-white">
+                            <span class="text-orange-300 text-xs font-bold uppercase tracking-wider mb-1">
+                                {item.category}
+                            </span>
+                            <h3 class="text-xl font-bold">{item.title}</h3>
+                            <p class="text-sm opacity-80 mt-1">{item.desc}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        ))
+    }
+</div>
+
+<script define:vars={{ showAll }}>
+    // Логика фильтрации на чистом JS
+    document.addEventListener("astro:page-load", () => {
+        // Обертка в astro:page-load нужна, если включен View Transitions.
+        // Если нет, можно просто написать код или DOMContentLoaded.
+        initPortfolio();
+    });
+
+    // Если View Transitions не используются, запускаем сразу:
+    initPortfolio();
+
+    function initPortfolio() {
+        const buttons = document.querySelectorAll(".filter-btn");
+        const items = document.querySelectorAll(".portfolio-item");
+
+        // Функция фильтрации
+        const filterItems = (category) => {
+            let visibleCount = 0;
+
+            items.forEach((item) => {
+                const itemCategory = item.getAttribute("data-category");
+                const shouldShow =
+                    category === "Все" || itemCategory === category;
+
+                if (shouldShow) {
+                    // Логика лимита (если showAll = false, показываем только первые 3)
+                    if (showAll || visibleCount < 3) {
+                        item.classList.remove(
+                            "hidden",
+                            "scale-90",
+                            "opacity-0",
+                        );
+                        item.classList.add("block", "scale-100", "opacity-100");
+                        visibleCount++;
+                    } else {
+                        // Скрываем лишние, даже если категория совпадает
+                        hideItem(item);
+                    }
+                } else {
+                    hideItem(item);
+                }
+            });
+        };
+
+        const hideItem = (item) => {
+            item.classList.remove("block", "scale-100", "opacity-100");
+            item.classList.add("hidden", "scale-90", "opacity-0");
+            // setTimeout нужен, чтобы display:none (hidden) применился после анимации opacity,
+            // но для простоты здесь используем Tailwind hidden сразу,
+            // либо можно сделать сложнее через CSS keyframes.
+            // Самый простой вариант для макета — просто hidden.
+        };
+
+        // Навешиваем обработчики на кнопки
+        buttons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                // Убираем активный класс у всех
+                buttons.forEach((b) => {
+                    b.classList.remove(
+                        "bg-terracotta",
+                        "text-white",
+                        "shadow-lg",
+                        "scale-105",
+                    );
+                    b.classList.add("bg-white", "text-brown", "hover:bg-sand");
+                });
+
+                // Добавляем активный класс нажатой
+                btn.classList.remove("bg-white", "text-brown", "hover:bg-sand");
+                btn.classList.add(
+                    "bg-terracotta",
+                    "text-white",
+                    "shadow-lg",
+                    "scale-105",
+                );
+
+                const category = btn.getAttribute("data-category");
+                filterItems(category);
+            });
+        });
+
+        // Запускаем фильтрацию при старте (для "Все")
+        filterItems("Все");
+    }
+</script>

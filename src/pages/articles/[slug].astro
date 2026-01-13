@@ -1,0 +1,177 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { Calendar, ArrowLeft, Share2, Bookmark } from "lucide-react";
+import { Image } from "astro:assets";
+
+export async function getStaticPaths() {
+    const articles = await getCollection("articles");
+    return articles.map((article) => ({
+        params: { slug: article.slug },
+        props: { article },
+    }));
+}
+
+const { article } = Astro.props;
+const { Content } = await article.render();
+---
+
+<Layout title={`${article.data.title} | Александр Пенкин`}>
+    <main class="bg-[#FDFBF7] min-h-screen pt-32 pb-24">
+        <div class="container mx-auto px-6">
+            <!-- Top Navigation -->
+            <div class="max-w-4xl mx-auto mb-12">
+                <a
+                    href="/articles"
+                    class="inline-flex items-center gap-2 text-gray-500 hover:text-terracotta transition-colors group"
+                >
+                    <ArrowLeft
+                        size={20}
+                        className="group-hover:-translate-x-1 transition-transform"
+                    />
+                    Назад к статьям
+                </a>
+            </div>
+
+            <!-- Article Header -->
+            <article class="max-w-4xl mx-auto">
+                <header class="mb-12">
+                    <div class="flex items-center gap-4 mb-6">
+                        <span
+                            class="bg-orange-100 text-terracotta text-sm font-bold px-4 py-1 rounded-full uppercase tracking-wider"
+                        >
+                            {article.data.category}
+                        </span>
+                        <div class="h-1 w-1 bg-sand rounded-full"></div>
+                        <div class="flex items-center gap-2 text-sm opacity-50">
+                            <Calendar size={16} />
+                            {
+                                new Date(
+                                    article.data.publishDate,
+                                ).toLocaleDateString("ru-RU", {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric",
+                                })
+                            }
+                        </div>
+                    </div>
+
+                    <h1
+                        class="text-4xl lg:text-6xl font-bold mb-8 ibm-plex-serif-bold-italic leading-tight"
+                    >
+                        {article.data.title}
+                    </h1>
+
+                    <div
+                        class="flex items-center justify-between py-8 border-y border-sand"
+                    >
+                        <div class="flex items-center gap-4">
+                            <img
+                                src={article.data.author.avatar}
+                                alt={article.data.author.name}
+                                class="w-12 h-12 rounded-full border-2 border-white shadow-sm"
+                            />
+                            <div>
+                                <div class="font-bold text-lg leading-tight">
+                                    {article.data.author.name}
+                                </div>
+                                <div class="text-sm opacity-50">
+                                    {article.data.author.role}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button
+                                class="w-10 h-10 flex items-center justify-center rounded-full border border-sand hover:bg-white hover:shadow-md transition-all"
+                            >
+                                <Share2 size={18} />
+                            </button>
+                            <button
+                                class="w-10 h-10 flex items-center justify-center rounded-full border border-sand hover:bg-white hover:shadow-md transition-all"
+                            >
+                                <Bookmark size={18} />
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Main Featured Image -->
+                <div
+                    class="relative h-[400px] md:h-[600px] rounded-3xl overflow-hidden mb-16 shadow-2xl"
+                >
+                    <Image
+                        src={article.data.image}
+                        alt={article.data.title}
+                        width={1200}
+                        height={800}
+                        class="w-full h-full object-cover"
+                    />
+                </div>
+
+                <!-- Article Content -->
+                <div
+                    class="prose prose-lg prose-stone max-w-none prose-headings:ibm-plex-serif-bold prose-blockquote:border-l-terracotta prose-blockquote:bg-orange-50/50 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-xl"
+                >
+                    <Content />
+                </div>
+
+                <!-- Footer / CTA -->
+                <footer class="mt-24 pt-12 border-t border-sand">
+                    <div
+                        class="bg-brown p-8 lg:p-12 rounded-3xl text-white relative overflow-hidden text-center md:text-left"
+                    >
+                        <div
+                            class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-terracotta opacity-20 rounded-full blur-3xl"
+                        >
+                        </div>
+
+                        <div
+                            class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8"
+                        >
+                            <div>
+                                <h3
+                                    class="text-3xl font-bold mb-4 ibm-plex-serif-bold"
+                                >
+                                    Понравилась статья?
+                                </h3>
+                                <p class="text-white/60 text-lg mb-0 max-w-lg">
+                                    Давайте обсудим ваш проект. Я помогу
+                                    воплотить эти идеи в вашем бизнесе.
+                                </p>
+                            </div>
+                            <a
+                                href="/#contacts"
+                                class="bg-terracotta hover:bg-orange-600 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-xl whitespace-nowrap"
+                            >
+                                Обсудить проект
+                            </a>
+                        </div>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </main>
+</Layout>
+
+<style is:global>
+    /* Custom prose styling to match our design system */
+    .prose h2 {
+        @apply text-3xl mt-12 mb-6 text-brown;
+    }
+    .prose p {
+        @apply leading-relaxed text-gray-700 mb-6;
+    }
+    .prose blockquote p {
+        @apply italic text-xl text-brown opacity-90;
+    }
+    .prose ul {
+        @apply list-disc list-outside pl-6 mb-8;
+    }
+    .prose li {
+        @apply mb-3 text-gray-700;
+    }
+    .prose img {
+        @apply rounded-3xl shadow-lg my-12 mx-auto transition-transform duration-500 hover:scale-[1.0];
+    }
+</style>

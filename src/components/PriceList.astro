@@ -1,0 +1,178 @@
+---
+// src/components/PriceList.astro
+
+// Данные храним прямо в Frontmatter.
+// Они скомпилируются в HTML на сервере.
+const prices = [
+    {
+        category: "Полиграфия (Дизайн)",
+        items: [
+            {
+                name: "Односторонняя листовка (А4/А5)",
+                price: "от 1 500 ₽",
+                deadline: "1-2 дня",
+            },
+            {
+                name: "Двусторонняя листовка / Флаер",
+                price: "от 2 500 ₽",
+                deadline: "2 дня",
+            },
+            {
+                name: "Визитная карточка (одна сторона)",
+                price: "от 1 000 ₽",
+                deadline: "1 день",
+            },
+            {
+                name: "Евробуклет (2 сгиба)",
+                price: "от 3 000 ₽",
+                deadline: "3 дня",
+            },
+            {
+                name: "Меню для кафе (за страницу)",
+                price: "от 1 500 ₽",
+                deadline: "2-3 дня",
+            },
+        ],
+    },
+    {
+        category: "Технические услуги (Препресс)",
+        items: [
+            {
+                name: "Правка макета (вылеты, CMYK)",
+                price: "от 500 ₽",
+                deadline: "30 мин",
+            },
+            {
+                name: "Векторизация логотипа (отрисовка)",
+                price: "от 1 500 ₽",
+                deadline: "1 день",
+            },
+            {
+                name: "Верстка брошюры (за полосу)",
+                price: "от 400 ₽",
+                deadline: "от объема",
+            },
+            {
+                name: "Подготовка к УФ-лаку / Тиснению",
+                price: "от 1 000 ₽",
+                deadline: "1 день",
+            },
+        ],
+    },
+];
+---
+
+<section
+    class="pt-12 pb-24 bg-[#FDFBF7] relative bg-[url('https://www.transparenttextures.com/patterns/concrete-wall.png')]"
+>
+    <div class="container mx-auto px-6 max-w-4xl">
+        <div class="text-center mb-16 reveal-on-scroll">
+            <h2
+                class="text-4xl lg:text-5xl font-bold mb-6 ibm-plex-serif-semibold-italic"
+            >
+                Стоимость услуг
+            </h2>
+            <p class="text-lg opacity-60 max-w-2xl mx-auto">
+                Средние цены для рынка Архангельска. Окончательная стоимость
+                зависит от сложности задачи и качества исходников.
+            </p>
+        </div>
+
+        <div class="grid gap-12">
+            {
+                prices.map((section, idx) => (
+                    <div
+                        class="price-section reveal-on-scroll"
+                        style={`--delay: ${idx * 0.1}s`}
+                    >
+                        <h3 class="text-2xl font-bold mb-6 text-terracotta ibm-plex-serif-semibold-italic pb-2 inline-block">
+                            {section.category}
+                        </h3>
+
+                        <ul class="space-y-4">
+                            {section.items.map((item) => (
+                                <li class="group flex flex-wrap items-end justify-between gap-4">
+                                    {/* Название услуги */}
+                                    <span class="font-medium text-brown shrink-0 relative z-10 bg-[#FDFBF7] text-[10px] lg:text-lg pr-2">
+                                        {item.name}
+                                    </span>
+
+                                    {/* Линия из точек (CSS only) */}
+                                    <span class="grow border-b-2 border-dotted border-gray-300 mb-1.5 opacity-50" />
+
+                                    {/* Цена и Сроки */}
+                                    <div class="flex flex-col items-end shrink-0 pl-2 z-10 text-right">
+                                        <span class="font-bold text-brown text-xs lg:text-xl whitespace-nowrap">
+                                            {item.price}
+                                        </span>
+                                        <span class="text-[10px] text-gray-400 font-mono max-h-5">
+                                            {item.deadline}
+                                        </span>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))
+            }
+        </div>
+
+        {/* SEO Disclaimer */}
+        <div
+            class="mt-12 p-6 bg-white rounded-xl border border-sand text-sm opacity-70 reveal-on-scroll"
+        >
+            <p class="mb-2">
+                <strong>Важно:</strong> Цены могут быть и ниже и выше.
+            </p>
+            <ul class="list-disc list-inside space-y-1">
+                <li>
+                    Всегда готов рассмотреть возможность срочной верстки «день в
+                    день».
+                </li>
+                <li>
+                    Есть ИП и смогу предоставить все отчетные документы для
+                    бухгалтерии.
+                </li>
+                <li>Исходники (AI, CDR, PSD) отдаю бесплатно после оплаты.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Исходное состояние: скрыто и смещено вниз */
+    .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+
+    /* Состояние "Видно": прозрачность 1, на месте */
+    .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+
+<script>
+    // Простой скрипт отслеживания скролла (Intersection Observer)
+    // Запускается один раз при загрузке страницы
+    const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1, // Срабатывает, когда показалось 10% блока
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target); // Перестаем следить после появления (чтобы не мигало)
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll(".reveal-on-scroll").forEach((el) => {
+        observer.observe(el);
+    });
+</script>

@@ -1,0 +1,91 @@
+---
+import { Layers, Monitor, Zap } from "lucide-react";
+import { TiltCard } from "../components/TiltCard";
+---
+
+<!-- BENEFITS SECTION -->
+<section class="py-24 bg-white relative">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2
+                class="text-4xl lg:text-5xl font-bold mb-4 ibm-plex-serif-semibold-italic"
+            >
+                Чем я могу помочь?
+            </h2>
+            <p class="text-lg opacity-60">
+                Решаю задачи бизнеса, а не просто "рисую картинки"
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <TiltCard client:load className="h-full">
+                <div
+                    class="bg-cream backdrop-blur-sm p-8 rounded-2xl h-full border border-sand hover:border-terracotta transition-colors group"
+                >
+                    <div
+                        class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
+                    >
+                        <Layers
+                            className="text-terracotta"
+                            size={32}
+                            client:load
+                        />
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-brown">
+                        Полиграфия 'под ключ'
+                    </h3>
+                    <p class="opacity-70 leading-relaxed text-brown/80">
+                        От идеи до подготовки спусков для типографии. Вам не
+                        нужно разбираться в требованиях печати.
+                    </p>
+                </div>
+            </TiltCard>
+
+            <TiltCard client:load className="h-full">
+                <div
+                    class="bg-cream backdrop-blur-sm p-8 rounded-2xl h-full border border-sand hover:border-terracotta transition-colors group"
+                >
+                    <div
+                        class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
+                    >
+                        <Monitor
+                            className="text-terracotta"
+                            size={32}
+                            client:load
+                        />
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-brown">
+                        Экономия бюджета
+                    </h3>
+                    <p class="opacity-70 leading-relaxed text-brown/80">
+                        Дешевле, чем держать дизайнера в штате. Вы платите
+                        только за результат, а не за часы в офисе.
+                    </p>
+                </div>
+            </TiltCard>
+
+            <TiltCard client:load className="h-full">
+                <div
+                    class="bg-cream backdrop-blur-sm p-8 rounded-2xl h-full border border-sand hover:border-terracotta transition-colors group"
+                >
+                    <div
+                        class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300"
+                    >
+                        <Zap
+                            className="text-terracotta"
+                            size={32}
+                            client:load
+                        />
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-brown">
+                        Быстрая связь
+                    </h3>
+                    <p class="opacity-70 leading-relaxed text-brown/80">
+                        Я всегда онлайн. Оперативно вношу правки и не пропадаю
+                        посередине проекта.
+                    </p>
+                </div>
+            </TiltCard>
+        </div>
+    </div>
+</section>

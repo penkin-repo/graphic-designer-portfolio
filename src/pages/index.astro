@@ -1,0 +1,96 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { CouponCard } from "../components/CouponCard";
+import { PortfolioGrid } from "../components/PortfolioGrid";
+import { ExternalLink } from "lucide-react";
+import { getCollection } from "astro:content";
+
+// import { Image } from "astro:assets";
+
+import Hero from "../components/Hero.astro";
+import Benefits from "../components/Benefits.astro";
+import AIphoto from "../components/AIphoto.astro";
+import SoftwareTools from "../components/SoftwareTools.astro";
+import PriceList from "../components/PriceList.astro";
+import QuickContacts from "../components/QuickContacts.astro";
+import FAQ from "../components/FAQ.astro";
+
+const portfolioItems = await getCollection("portfolio");
+const items = portfolioItems.map((item) => ({
+  id: item.data.id || 0,
+  title: item.data.title,
+  category: item.data.category,
+  img: item.data.image.src,
+  desc: item.data.desc,
+  slug: item.slug,
+}));
+---
+
+<Layout
+  title="Графический дизайнер Александр Пенкин | Архангельск и Северодвинск | Полиграфия и Препресс"
+  description="Услуги графического дизайнера в Архангельске и Северодвинске. Дизайн и верстка листовок, меню, каталогов. Профессиональная предпечатная подготовка (препресс). Исправление макетов для типографии. Цены от 500 руб."
+  keywords="графический дизайнер Архангельск, дизайнер Северодвинск, верстка полиграфии, дизайн меню, предпечатная подготовка, исправить макет для типографии, дизайн листовок цена"
+>
+  <!-- HERO SECTION -->
+  <Hero />
+
+  <!-- BENEFITS SECTION -->
+  <Benefits />
+
+  <!-- MINI PORTFOLIO PREVIEW -->
+  <section class="py-24 bg-cream">
+    <div class="container mx-auto px-6">
+      <div class="flex justify-between items-end mb-12">
+        <div>
+          <h2
+            class="text-4xl lg:text-5xl font-bold mb-4 ibm-plex-serif-semibold-italic"
+          >
+            Свежие работы
+          </h2>
+          <p class="opacity-60">Избранные проекты за последний месяц</p>
+        </div>
+        <a
+          href="/portfolio"
+          class="hidden md:flex items-center gap-2 text-terracotta font-bold hover:gap-4 transition-all"
+        >
+          Смотреть всё <ExternalLink size={18} client:load />
+        </a>
+      </div>
+
+      <PortfolioGrid client:load items={items} showAll={false} />
+
+      <div class="mt-12 text-center md:hidden">
+        <a
+          href="/portfolio"
+          class="block w-full py-4 rounded-xl border-2 border-terracotta text-terracotta font-bold"
+        >
+          Смотреть все работы
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI PHOTO SESSION SECTION -->
+  <AIphoto />
+
+  <!-- SOFTWARE TOOLS (3D CUBES) -->
+  <SoftwareTools />
+
+  <!-- SPECIAL OFFER -->
+  <section
+    class="py-24 relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/concrete-wall.png')]"
+  >
+    <div class="container mx-auto px-6 max-w-6xl">
+      <CouponCard client:load />
+    </div>
+  </section>
+
+  <!-- PRICE LIST -->
+  <PriceList />
+
+  <!-- QUICK CONTACTS (Bottom Block) -->
+  <QuickContacts />
+
+  <!-- FAQ -->
+  <FAQ />
+</Layout>

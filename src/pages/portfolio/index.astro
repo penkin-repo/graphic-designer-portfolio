@@ -1,0 +1,42 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { PortfolioGrid } from "../../components/PortfolioGrid";
+import { getCollection } from "astro:content";
+
+const portfolioItems = await getCollection("portfolio");
+const items = portfolioItems.map((item) => ({
+  id: item.data.id || 0,
+  title: item.data.title,
+  category: item.data.category,
+  img: item.data.image.src,
+  desc: item.data.desc,
+  slug: item.slug,
+}));
+---
+
+<Layout
+  title="Портфолио - DESIGN.PRO"
+  description="Полная коллекция реализованных проектов по графическому дизайну: полиграфия, меню, листовки и рекламные материалы."
+>
+  <div class="pt-36 pb-24 lg:pt-24 min-h-screen">
+    <div class="container mx-auto px-6">
+      <a
+        href="/"
+        class="mb-8 flex items-center gap-2 text-terracotta font-medium hover:underline inline-flex"
+      >
+        ← На главную
+      </a>
+
+      <div class="text-center mb-12">
+        <h1 class="text-5xl lg:text-6xl font-bold mb-6 ibm-plex-serif-bold">
+          Все <span class="text-terracotta ibm-plex-serif-semibold-italic"
+            >работы</span
+          >
+        </h1>
+        <p class="opacity-60">Полная коллекция реализованных проектов</p>
+      </div>
+
+      <PortfolioGrid client:load items={items} showAll={true} />
+    </div>
+  </div>
+</Layout>
