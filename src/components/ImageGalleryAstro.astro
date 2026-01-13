@@ -1,13 +1,15 @@
 ---
 import { Image } from "astro:assets";
+import { getImage } from "astro:assets";
+// Импортируем иконки из lucide-react
+import { X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 
-// Описываем структуру входящего объекта картинки
 interface ImageMetadata {
     src: string;
     width: number;
     height: number;
     format: string;
-    fsPath?: string; // Поле fsPath не обязательно для Astro, но оно есть в ваших данных
+    fsPath?: string;
 }
 
 interface Props {
@@ -17,8 +19,18 @@ interface Props {
 
 const { images, title } = Astro.props;
 
-// Подготавливаем массив URL-адресов для передачи в клиентский JavaScript (для лайтбокса)
-const galleryImageUrls = images.map((img) => img.src);
+const optimizedImages = await Promise.all(
+    images.map(async (image) => {
+        const optimized = await getImage({
+            src: image,
+            format: "webp",
+            quality: 80,
+            width: 1920,
+            height: undefined,
+        });
+        return optimized.src;
+    }),
+);
 ---
 
 <section class="mb-16 gallery-container">
@@ -41,24 +53,7 @@ const galleryImageUrls = images.map((img) => img.src);
 
                     <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <div class="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="white"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <>
-                                    <path d="M15 3h6v6" />
-                                    <path d="M9 21H3v-6" />
-                                    <path d="M21 3l-7 7" />
-                                    <path d="M3 21l7-7" />
-                                </>
-                            </svg>
+                            <Maximize2 className="text-white w-6 h-6" />
                         </div>
                     </div>
                 </div>
@@ -74,67 +69,54 @@ const galleryImageUrls = images.map((img) => img.src);
     >
         <button
             id="close-btn"
-            class="absolute top-6 right-6 z-[110] bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors border border-white/20 cursor-pointer"
+            class="absolute top-6 right-6 z-[120] bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors border border-white/20 cursor-pointer group"
         >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                ><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg
-            >
+            <X
+                className="text-white w-6 h-6 group-hover:scale-110 transition-transform"
+            />
         </button>
 
         <button
             id="prev-btn"
-            class="absolute left-4 top-1/2 -translate-y-1/2 md:left-8 z-[110] bg-white/10 hover:bg-white/20 p-4 rounded-full transition-colors border border-white/20 hidden md:block cursor-pointer"
+            class="absolute left-4 top-1/2 -translate-y-1/2 md:left-8 z-[120] bg-white/10 hover:bg-white/20 p-4 rounded-full transition-colors border border-white/20 hidden md:block cursor-pointer group"
         >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg
-            >
+            <ChevronLeft
+                className="text-white w-8 h-8 group-hover:-translate-x-1 transition-transform"
+            />
         </button>
 
         <button
             id="next-btn"
-            class="absolute right-4 top-1/2 -translate-y-1/2 md:right-8 z-[110] bg-white/10 hover:bg-white/20 p-4 rounded-full transition-colors border border-white/20 hidden md:block cursor-pointer"
+            class="absolute right-4 top-1/2 -translate-y-1/2 md:right-8 z-[120] bg-white/10 hover:bg-white/20 p-4 rounded-full transition-colors border border-white/20 hidden md:block cursor-pointer group"
         >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg
-            >
+            <ChevronRight
+                className="text-white w-8 h-8 group-hover:translate-x-1 transition-transform"
+            />
         </button>
 
         <div
             class="relative w-full h-full flex flex-col items-center justify-center pointer-events-none"
         >
+            <div
+                id="image-loader"
+                class="absolute inset-0 flex items-center justify-center z-0"
+            >
+                <div
+                    class="w-12 h-12 border-4 border-white/10 border-t-white rounded-full animate-spin"
+                >
+                </div>
+            </div>
+
             <img
                 id="lightbox-img"
                 src=""
                 alt="Full view"
-                class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl scale-90 transition-transform duration-300 pointer-events-auto select-none"
+                class="relative z-10 max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl transition-all duration-300 pointer-events-auto select-none opacity-0 scale-95"
             />
 
-            <div class="mt-6 flex items-center gap-6 pointer-events-auto">
+            <div
+                class="mt-6 flex items-center gap-6 pointer-events-auto z-[120]"
+            >
                 <span id="counter" class="text-white/60 font-medium select-none"
                     >1 / 1</span
                 >
@@ -142,37 +124,15 @@ const galleryImageUrls = images.map((img) => img.src);
                 <div class="flex gap-2 md:hidden">
                     <button
                         id="prev-btn-mobile"
-                        class="bg-white/10 p-3 rounded-full border border-white/20 text-white"
+                        class="bg-white/10 p-3 rounded-full border border-white/20 text-white active:bg-white/30 transition-colors"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            ><path d="m15 18-6-6 6-6"></path></svg
-                        >
+                        <ChevronLeft className="w-6 h-6" />
                     </button>
                     <button
                         id="next-btn-mobile"
-                        class="bg-white/10 p-3 rounded-full border border-white/20 text-white"
+                        class="bg-white/10 p-3 rounded-full border border-white/20 text-white active:bg-white/30 transition-colors"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            ><path d="m9 18 6-6-6-6"></path></svg
-                        >
+                        <ChevronRight className="w-6 h-6" />
                     </button>
                 </div>
             </div>
@@ -180,8 +140,7 @@ const galleryImageUrls = images.map((img) => img.src);
     </div>
 </section>
 
-<script define:vars={{ galleryImageUrls }}>
-    // Изолируем логику, чтобы не засорять глобальную область
+<script define:vars={{ galleryImageUrls: optimizedImages }}>
     (function () {
         const triggers = document.querySelectorAll(".thumbnail-trigger");
         const lightbox = document.getElementById("lightbox");
@@ -196,7 +155,7 @@ const galleryImageUrls = images.map((img) => img.src);
         let currentIndex = null;
         const total = galleryImageUrls.length;
 
-        // --- 1. Intersection Observer (Анимация появления) ---
+        // --- 1. Intersection Observer ---
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
@@ -211,50 +170,54 @@ const galleryImageUrls = images.map((img) => img.src);
             },
             { threshold: 0.1 },
         );
-
         triggers.forEach((trigger) => observer.observe(trigger));
 
         // --- 2. Логика Лайтбокса ---
+        const preloadNextImage = (index) => {
+            const nextIndex = (index + 1) % total;
+            const img = new Image();
+            img.src = galleryImageUrls[nextIndex];
+        };
 
         const updateImage = () => {
             if (currentIndex === null) return;
 
-            // Анимация "breath" при смене
+            lightboxImg.style.opacity = "0";
             lightboxImg.style.transform = "scale(0.95)";
-            lightboxImg.style.opacity = "0.8";
 
-            setTimeout(() => {
-                lightboxImg.src = galleryImageUrls[currentIndex];
+            const tempImg = new Image();
+            const targetSrc = galleryImageUrls[currentIndex];
+
+            tempImg.onload = () => {
+                lightboxImg.src = targetSrc;
                 counter.textContent = `${currentIndex + 1} / ${total}`;
-                lightboxImg.style.transform = "scale(1)";
                 lightboxImg.style.opacity = "1";
-            }, 150);
+                lightboxImg.style.transform = "scale(1)";
+                preloadNextImage(currentIndex);
+            };
+            tempImg.src = targetSrc;
         };
 
         const openLightbox = (index) => {
             currentIndex = index;
-            lightboxImg.src = galleryImageUrls[currentIndex];
-            counter.textContent = `${currentIndex + 1} / ${total}`;
-
             lightbox.classList.remove("hidden");
-            // requestAnimationFrame нужен, чтобы браузер успел отрисовать display:block перед добавлением opacity:1
+            document.body.style.overflow = "hidden";
             requestAnimationFrame(() => {
                 lightbox.classList.remove("opacity-0");
-                lightboxImg.classList.remove("scale-90");
+                updateImage();
             });
-
-            document.body.style.overflow = "hidden";
         };
 
         const closeLightbox = () => {
             lightbox.classList.add("opacity-0");
-            lightboxImg.classList.add("scale-90");
-
+            lightboxImg.style.transform = "scale(0.95)";
+            lightboxImg.style.opacity = "0";
             setTimeout(() => {
                 lightbox.classList.add("hidden");
                 currentIndex = null;
+                lightboxImg.src = "";
                 document.body.style.overflow = "";
-            }, 300); // 300ms совпадает с duration-300 в CSS
+            }, 300);
         };
 
         const showNext = (e) => {
@@ -271,9 +234,7 @@ const galleryImageUrls = images.map((img) => img.src);
             updateImage();
         };
 
-        // --- 3. Обработчики событий ---
-
-        // Клик по миниатюре
+        // --- 3. Обработчики ---
         triggers.forEach((trigger) => {
             trigger.addEventListener("click", () => {
                 const index = parseInt(trigger.dataset.index);
@@ -281,24 +242,22 @@ const galleryImageUrls = images.map((img) => img.src);
             });
         });
 
-        // Кнопки управления
         closeBtn.addEventListener("click", (e) => {
             e.stopPropagation();
             closeLightbox();
         });
-        nextBtn.addEventListener("click", showNext);
-        prevBtn.addEventListener("click", showPrev);
-        nextBtnMob.addEventListener("click", showNext);
-        prevBtnMob.addEventListener("click", showPrev);
 
-        // Закрытие по клику на фон (если клик именно по #lightbox)
+        [nextBtn, nextBtnMob].forEach((btn) =>
+            btn?.addEventListener("click", showNext),
+        );
+        [prevBtn, prevBtnMob].forEach((btn) =>
+            btn?.addEventListener("click", showPrev),
+        );
+
         lightbox.addEventListener("click", (e) => {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
+            if (e.target === lightbox) closeLightbox();
         });
 
-        // Клавиатура
         document.addEventListener("keydown", (e) => {
             if (currentIndex === null) return;
             if (e.key === "Escape") closeLightbox();

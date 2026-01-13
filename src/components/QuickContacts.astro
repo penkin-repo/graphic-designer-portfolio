@@ -1,5 +1,6 @@
 ---
 import { MessageCircle, Mail } from "lucide-react";
+import { CONTACTS } from "../data/constants";
 ---
 
 <section class="py-12 bg-cream border-t border-sand">
@@ -12,16 +13,17 @@ import { MessageCircle, Mail } from "lucide-react";
         </div>
         <div class="flex gap-4">
             <a
-                href="https://t.me/sunpen"
+                href={CONTACTS.telegram}
                 class="flex items-center gap-2 bg-[#0088cc] text-white px-6 py-3 rounded-lg hover:bg-[#0077b5] transition-colors"
             >
                 <MessageCircle size={20} client:load /> Telegram
             </a>
             <a
-                href="mailto:design@example.com"
+                href={`mailto:${CONTACTS.email}`}
                 class="flex items-center gap-2 bg-brown text-white px-6 py-3 rounded-lg hover:bg-[#3d312a] transition-colors"
             >
-                <Mail size={20} client:load /> Email
+                <Mail size={20} client:load />
+                {CONTACTS.email}
             </a>
         </div>
     </div>

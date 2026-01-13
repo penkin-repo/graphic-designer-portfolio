@@ -59,7 +59,7 @@ export const CouponCard = () => {
 
                         {/* SEO Change: Триггер на&nbsp;проблему (&laquo;боль&raquo; клиента) */}
                         <h2 className="text-3xl lg:text-5xl font-bold ibm-plex-serif-semibold-italic mb-6 text-white leading-tight">
-                            Типография завернула макет?
+                            Типография вернула макет?
                         </h2>
 
                         {/* SEO Change: Технические термины и&nbsp;гарантия результата */}

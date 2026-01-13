@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { PortfolioGrid } from "../../components/PortfolioGrid";
 import { getCollection } from "astro:content";
-
+import { ArrowLeft } from "lucide-react";
 const portfolioItems = await getCollection("portfolio");
 const items = portfolioItems.map((item) => ({
   id: item.data.id || 0,
@@ -24,7 +24,7 @@ const items = portfolioItems.map((item) => ({
         href="/"
         class="mb-8 flex items-center gap-2 text-terracotta font-medium hover:underline inline-flex"
       >
-        ← На главную
+        <ArrowLeft size={20} client:load /> На главную
       </a>
 
       <div class="text-center mb-12">
