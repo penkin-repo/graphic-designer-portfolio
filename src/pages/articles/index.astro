@@ -9,7 +9,11 @@ const articles = await getCollection("articles");
 articles.sort((a, b) => b.data.publishDate.localeCompare(a.data.publishDate));
 ---
 
-<Layout title="Статьи и советы | Александр Пенкин">
+<Layout 
+  title="Статьи и советы по графическому дизайну и полиграфии | Александр Пенкин"
+  description="Полезные статьи, гайды по подготовке макетов к печати, препрессу, верстке полиграфии и дизайну рекламных материалов от Александра Пенкина."
+  keywords="статьи о дизайне, советы по полиграфии, препресс, подготовка к печати, верстка макетов"
+>
   <main class="pt-36 pb-24 lg:pt-20 min-h-screen">
     <div class="container mx-auto px-6">
       <!-- Header -->

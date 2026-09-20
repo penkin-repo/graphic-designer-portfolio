@@ -16,7 +16,11 @@ const { article } = Astro.props;
 const { Content } = await article.render();
 ---
 
-<Layout title={`${article.data.title} | Александр Пенкин`}>
+<Layout 
+    title={`${article.data.title} | Александр Пенкин`}
+    description={article.data.description}
+    image={article.data.image.src}
+>
     <main class="bg-[#FDFBF7] min-h-screen pt-32 pb-24">
         <div class="container mx-auto px-6">
             <!-- Top Navigation -->

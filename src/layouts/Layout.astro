@@ -8,6 +8,7 @@ interface Props {
   title?: string;
   description?: string;
   keywords?: string;
+  image?: string;
 }
 
 interface SiteProps {
@@ -18,15 +19,50 @@ interface SiteProps {
 
 const siteProps: SiteProps = {
   telephone: "+79022857038",
-  url: "https://design.pro",
-  metaImage: "https://design.pro/meta-image.jpg",
+  url: "https://penkindesign.ru",
+  metaImage: "https://penkindesign.ru/favicon.svg",
 };
 
 const {
   title = "Графический дизайнер Александр Пенкин | Архангельск и Северодвинск | Полиграфия и Препресс",
-  description = "слуги графического дизайнера в Архангельске и Северодвинске. Дизайн и верстка листовок, меню, каталогов. Профессиональная предпечатная подготовка (препресс). Исправление макетов для типографии. Цены от 500 руб.",
-  keywords = "",
+  description = "Услуги графического дизайнера в Архангельске и Северодвинске. Дизайн и верстка листовок, меню, каталогов. Профессиональная предпечатная подготовка (препресс). Исправление макетов для типографии. Цены от 500 руб.",
+  keywords = "графический дизайнер Архангельск, дизайнер Северодвинск, верстка полиграфии, дизайн меню, предпечатная подготовка, исправить макет для типографии, дизайн листовок цена",
+  image = siteProps.metaImage,
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || siteProps.url);
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Александр Пенкин | Графический дизайн",
+  "image": image,
+  "@id": siteProps.url,
+  "url": siteProps.url,
+  "telephone": siteProps.telephone,
+  "priceRange": "500-5000 RUB",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Архангельск",
+    "addressRegion": "Архангельская область",
+    "addressCountry": "RU"
+  },
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Архангельск"
+    },
+    {
+      "@type": "City",
+      "name": "Северодвинск"
+    },
+    {
+      "@type": "City",
+      "name": "Новодвинск"
+    }
+  ],
+  "description": "Профессиональная верстка полиграфии, дизайн меню и рекламных материалов. Подготовка макетов к офсетной и цифровой печати."
+};
 ---
 
 <!doctype html>
@@ -34,66 +70,38 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+
+    <!-- Yandex Verification -->
+    <meta name="yandex-verification" content="7f3e54bce28b1d2c" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL.href} />
+
+    <!-- Open Graph / VK / Telegram -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content={image} />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="PENKIN DESIGN" />
 
-    <title>{title}</title>
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL.href} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={siteProps.url} />
-    <meta
-      property="og:title"
-      content="Александр Пенкин — Дизайн полиграфии и верстка (Архангельск/Северодвинск)"
-    />
-    <meta
-      property="og:description"
-      content="Разработка макетов, которые принимают типографии с первого раза. Листовки, буклеты, меню, каталоги. Срочная помощь с файлами."
-    />
-    <meta
-      property="og:image"
-      content={siteProps.metaImage}
-    />
+    <!-- Schema.org Microdata (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "GraphicDesigner", // Или ProfessionalService
-        "name": "Александр Пенкин | Графический дизайн",
-        "image": siteProps.metaImage,
-        "@id": siteProps.url,
-        "url": siteProps.url,
-        "telephone": siteProps.telephone,
-        "priceRange": "500-5000 RUB",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Архангельск",
-          "addressRegion": "Архангельская область",
-          "addressCountry": "RU"
-        },
-        "areaServed": [
-          {
-            "@type": "City",
-            "name": "Архангельск"
-          },
-          {
-            "@type": "City",
-            "name": "Северодвинск"
-          },
-          {
-            "@type": "City",
-            "name": "Новодвинск"
-          }
-        ],
-        "description": "Профессиональная верстка полиграфии, дизайн меню и рекламных материалов. Подготовка макетов к офсетной и цифровой печати."
-      }
-    </script>
-
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class="min-h-screen bg-cream text-brown font-sans overflow-x-hidden">
