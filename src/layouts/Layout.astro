@@ -35,33 +35,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || siteProps.url);
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "Александр Пенкин | Графический дизайн",
-  "image": image,
+  name: "Александр Пенкин | Графический дизайн",
+  image: image,
   "@id": siteProps.url,
-  "url": siteProps.url,
-  "telephone": siteProps.telephone,
-  "priceRange": "500-5000 RUB",
-  "address": {
+  url: siteProps.url,
+  telephone: siteProps.telephone,
+  priceRange: "500-5000 RUB",
+  address: {
     "@type": "PostalAddress",
-    "addressLocality": "Архангельск",
-    "addressRegion": "Архангельская область",
-    "addressCountry": "RU"
+    addressLocality: "Архангельск",
+    addressRegion: "Архангельская область",
+    addressCountry: "RU",
   },
-  "areaServed": [
+  areaServed: [
     {
       "@type": "City",
-      "name": "Архангельск"
+      name: "Архангельск",
     },
     {
       "@type": "City",
-      "name": "Северодвинск"
+      name: "Северодвинск",
     },
     {
       "@type": "City",
-      "name": "Новодвинск"
-    }
+      name: "Новодвинск",
+    },
   ],
-  "description": "Профессиональная верстка полиграфии, дизайн меню и рекламных материалов. Подготовка макетов к офсетной и цифровой печати."
+  description:
+    "Профессиональная верстка полиграфии, дизайн меню и рекламных материалов. Подготовка макетов к офсетной и цифровой печати.",
 };
 ---
 
@@ -103,6 +104,54 @@ const schemaData = {
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+      (function (m, e, t, r, i, k, a) {
+        m[i] =
+          m[i] ||
+          function () {
+            (m[i].a = m[i].a || []).push(arguments);
+          };
+        m[i].l = 1 * new Date();
+        for (var j = 0; j < document.scripts.length; j++) {
+          if (document.scripts[j].src === r) {
+            return;
+          }
+        }
+        ((k = e.createElement(t)),
+          (a = e.getElementsByTagName(t)[0]),
+          (k.async = 1),
+          (k.src = r),
+          a.parentNode.insertBefore(k, a));
+      })(
+        window,
+        document,
+        "script",
+        "https://mc.yandex.ru/metrika/tag.js?id=112845747",
+        "ym",
+      );
+
+      ym(112845747, "init", {
+        ssr: true,
+        webvisor: true,
+        clickmap: true,
+        ecommerce: "dataLayer",
+        referrer: document.referrer,
+        url: location.href,
+        accurateTrackBounce: true,
+        trackLinks: true,
+      });
+    </script>
+    <noscript
+      ><div>
+        <img
+          src="https://mc.yandex.ru/watch/112845747"
+          style="position:absolute; left:-9999px;"
+          alt=""
+        />
+      </div></noscript
+    >
+    <!-- /Yandex.Metrika counter -->
   </head>
   <body class="min-h-screen bg-cream text-brown font-sans overflow-x-hidden">
     <Header />
