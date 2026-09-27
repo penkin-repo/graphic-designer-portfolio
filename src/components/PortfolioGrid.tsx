@@ -57,9 +57,9 @@ export const PortfolioGrid = ({ items, showAll = false }: PortfolioGridProps) =>
                         transition={{ duration: 0.3 }}
                         className="group"
                     >
-                        <a href={`/portfolio/${item.slug}`}>
+                        <a href={`/portfolio/${item.slug}/`}>
                             <div className="relative overflow-hidden rounded-2xl shadow-lg cursor-pointer">
-                                <img src={item.img} alt={item.title} className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500" />
+                                <img src={item.img} alt={item.title} width={1200} height={800} loading="lazy" className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 text-white">
                                     <span className="text-orange-300 text-xs font-bold uppercase tracking-wider mb-1">{item.category}</span>
                                     <h3 className="text-xl font-bold">{item.title}</h3>

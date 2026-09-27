@@ -1,11 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { CouponCard } from "../components/CouponCard";
-import { PortfolioGrid } from "../components/PortfolioGrid";
+import PortfolioGrid from "../components/PortfolioGrid.astro";
 import { ExternalLink } from "lucide-react";
 import { getCollection } from "astro:content";
-
-// import { Image } from "astro:assets";
 
 import Hero from "../components/Hero.astro";
 import Benefits from "../components/Benefits.astro";
@@ -20,7 +18,7 @@ const items = portfolioItems.map((item) => ({
   id: item.data.id || 0,
   title: item.data.title,
   category: item.data.category,
-  img: item.data.image.src,
+  image: item.data.image,
   desc: item.data.desc,
   slug: item.slug,
 }));
@@ -50,18 +48,18 @@ const items = portfolioItems.map((item) => ({
           <p class="opacity-60">Избранные проекты за последний месяц</p>
         </div>
         <a
-          href="/portfolio"
+          href="/portfolio/"
           class="hidden md:flex items-center gap-2 text-terracotta font-bold hover:gap-4 transition-all"
         >
           Смотреть всё <ExternalLink size={18} client:load />
         </a>
       </div>
 
-      <PortfolioGrid client:load items={items} showAll={false} />
+      <PortfolioGrid items={items} showAll={false} />
 
       <div class="mt-12 text-center md:hidden">
         <a
-          href="/portfolio"
+          href="/portfolio/"
           class="block w-full py-4 rounded-xl border-2 border-terracotta text-terracotta font-bold"
         >
           Смотреть все работы

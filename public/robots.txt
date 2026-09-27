@@ -3,7 +3,3 @@ Allow: /
 
 # Sitemap
 Sitemap: https://penkindesign.ru/sitemap-index.xml
-Sitemap: https://penkindesign.ru/sitemap.xml
-
-# Host
-Host: https://penkindesign.ru

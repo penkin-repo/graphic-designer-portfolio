@@ -14,19 +14,76 @@ export async function getStaticPaths() {
 
 const { article } = Astro.props;
 const { Content } = await article.render();
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || "https://penkindesign.ru");
+const absoluteImageUrl = new URL(article.data.image.src, Astro.site || "https://penkindesign.ru").href;
+
+const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.data.title,
+    description: article.data.description,
+    image: [absoluteImageUrl],
+    datePublished: new Date(article.data.publishDate).toISOString(),
+    author: {
+        "@type": "Person",
+        name: article.data.author?.name || "Александр Пенкин",
+        jobTitle: article.data.author?.role || "Графический дизайнер",
+    },
+    publisher: {
+        "@type": "Organization",
+        name: "PENKIN DESIGN",
+        url: "https://penkindesign.ru",
+        logo: {
+            "@type": "ImageObject",
+            url: "https://penkindesign.ru/og-image.jpg",
+        },
+    },
+    mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": canonicalURL.href,
+    },
+};
+
+const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        {
+            "@type": "ListItem",
+            position: 1,
+            name: "Главная",
+            item: "https://penkindesign.ru/",
+        },
+        {
+            "@type": "ListItem",
+            position: 2,
+            name: "Статьи",
+            item: "https://penkindesign.ru/articles/",
+        },
+        {
+            "@type": "ListItem",
+            position: 3,
+            name: article.data.title,
+            item: canonicalURL.href,
+        },
+    ],
+};
 ---
 
 <Layout 
     title={`${article.data.title} | Александр Пенкин`}
     description={article.data.description}
     image={article.data.image.src}
+    type="article"
+    schema={[articleSchema, breadcrumbSchema]}
 >
     <main class="bg-[#FDFBF7] min-h-screen pt-32 pb-24">
         <div class="container mx-auto px-6">
             <!-- Top Navigation -->
             <div class="max-w-4xl mx-auto mb-12">
                 <a
-                    href="/articles"
+                    href="/articles/"
                     class="inline-flex items-center gap-2 text-gray-500 hover:text-terracotta transition-colors group"
                 >
                     <ArrowLeft

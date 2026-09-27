@@ -9,61 +9,88 @@ interface Props {
   description?: string;
   keywords?: string;
   image?: string;
+  type?: "website" | "article";
+  schema?: Record<string, any> | Record<string, any>[];
 }
 
-interface SiteProps {
-  telephone: string;
-  url: string;
-  metaImage: string;
-}
-
-const siteProps: SiteProps = {
+const siteProps = {
   telephone: "+79022857038",
   url: "https://penkindesign.ru",
-  metaImage: "https://penkindesign.ru/favicon.svg",
+  defaultTitle:
+    "Графический дизайнер Александр Пенкин | Архангельск и Северодвинск | Полиграфия и Препресс",
+  defaultDescription:
+    "Услуги графического дизайнера в Архангельске и Северодвинске. Дизайн и верстка листовок, меню, каталогов. Профессиональная предпечатная подготовка (препресс). Исправление макетов для типографии. Цены от 500 руб.",
+  metaImage: "/og-image.jpg",
 };
 
 const {
-  title = "Графический дизайнер Александр Пенкин | Архангельск и Северодвинск | Полиграфия и Препресс",
-  description = "Услуги графического дизайнера в Архангельске и Северодвинске. Дизайн и верстка листовок, меню, каталогов. Профессиональная предпечатная подготовка (препресс). Исправление макетов для типографии. Цены от 500 руб.",
-  keywords = "графический дизайнер Архангельск, дизайнер Северодвинск, верстка полиграфии, дизайн меню, предпечатная подготовка, исправить макет для типографии, дизайн листовок цена",
+  title = siteProps.defaultTitle,
+  description = siteProps.defaultDescription,
+  keywords,
   image = siteProps.metaImage,
+  type = "website",
+  schema,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || siteProps.url);
 
-const schemaData = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "Александр Пенкин | Графический дизайн",
-  image: image,
-  "@id": siteProps.url,
-  url: siteProps.url,
-  telephone: siteProps.telephone,
-  priceRange: "500-5000 RUB",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Архангельск",
-    addressRegion: "Архангельская область",
-    addressCountry: "RU",
+// Гарантируем абсолютный URL для Open Graph и Twitter Cards
+const formattedImage =
+  image.startsWith("http://") || image.startsWith("https://")
+    ? image
+    : new URL(
+        image.startsWith("/") ? image : `/${image}`,
+        Astro.site || siteProps.url,
+      ).href;
+
+const defaultSchema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: "Александр Пенкин | Графический дизайн",
+    image: formattedImage,
+    "@id": `${siteProps.url}/#business`,
+    url: siteProps.url,
+    telephone: siteProps.telephone,
+    priceRange: "500-5000 RUB",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Архангельск",
+      addressRegion: "Архангельская область",
+      addressCountry: "RU",
+    },
+    areaServed: [
+      {
+        "@type": "City",
+        name: "Архангельск",
+      },
+      {
+        "@type": "City",
+        name: "Северодвинск",
+      },
+      {
+        "@type": "City",
+        name: "Новодвинск",
+      },
+    ],
+    description:
+      "Профессиональная верстка полиграфии, дизайн меню и рекламных материалов. Подготовка макетов к офсетной и цифровой печати.",
   },
-  areaServed: [
-    {
-      "@type": "City",
-      name: "Архангельск",
-    },
-    {
-      "@type": "City",
-      name: "Северодвинск",
-    },
-    {
-      "@type": "City",
-      name: "Новодвинск",
-    },
-  ],
-  description:
-    "Профессиональная верстка полиграфии, дизайн меню и рекламных материалов. Подготовка макетов к офсетной и цифровой печати.",
-};
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${siteProps.url}/#website`,
+    url: siteProps.url,
+    name: "PENKIN DESIGN",
+    description: siteProps.defaultDescription,
+  },
+];
+
+const schemasToRender = schema
+  ? Array.isArray(schema)
+    ? schema
+    : [schema]
+  : defaultSchema;
 ---
 
 <!doctype html>
@@ -84,11 +111,11 @@ const schemaData = {
     <link rel="canonical" href={canonicalURL.href} />
 
     <!-- Open Graph / VK / Telegram -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content={formattedImage} />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:site_name" content="PENKIN DESIGN" />
 
@@ -97,13 +124,27 @@ const schemaData = {
     <meta name="twitter:url" content={canonicalURL.href} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
-
-    <!-- Schema.org Microdata (JSON-LD) -->
-    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+    <meta name="twitter:image" content={formattedImage} />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="PENKIN DESIGN" />
+    <meta name="theme-color" content="#FDFBF7" />
+
+    <!-- Schema.org Microdata (JSON-LD) -->
+    {
+      schemasToRender.map((s) => (
+        <script type="application/ld+json" set:html={JSON.stringify(s)} />
+      ))
+    }
+
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
       (function (m, e, t, r, i, k, a) {
@@ -142,15 +183,15 @@ const schemaData = {
         trackLinks: true,
       });
     </script>
-    <noscript
-      ><div>
+    <noscript>
+      <div>
         <img
           src="https://mc.yandex.ru/watch/112845747"
           style="position:absolute; left:-9999px;"
           alt=""
         />
-      </div></noscript
-    >
+      </div>
+    </noscript>
     <!-- /Yandex.Metrika counter -->
   </head>
   <body class="min-h-screen bg-cream text-brown font-sans overflow-x-hidden">
